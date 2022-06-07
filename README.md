@@ -1,0 +1,2 @@
+# Bloggy
+A simple blog.
