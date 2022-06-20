@@ -10,6 +10,7 @@ const passport = require('passport')
 const flash = require('connect-flash')
 const session = require('express-session')
 const rateLimiter = require('express-rate-limit')
+const methodOverride = require('method-override')
 
 // Requiring modules in files
 const {connectToDB} = require('./utils/connectDB')
@@ -39,6 +40,7 @@ app.use(
       max: 1000, // limit each IP to 1000 requests per windowMs
     })
   )
+app.use(methodOverride('_method'))
 
 // flash
 app.use(flash())
@@ -59,8 +61,19 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 
+//  Save current user in session
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+})
+
+
+
 initializePassport(passport)
 initializeGooglePassport(passport)
+
+// Templating Engine
+app.set('view engine', 'ejs')
 
 
 module.exports =  app

@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 const bcrypt = require('bcryptjs')
 
-const userSchema = new Schema({
+const authorSchema = new Schema({
     username: {
         type: String,
         trim: true,
@@ -18,14 +18,23 @@ const userSchema = new Schema({
     password: {
         type: String
     },
+    passwordResetToken:{
+        type: String,
+        default: null,
+    },
+
+    tokenExpiryTime: {
+        type: Date,
+        default: null,
+    },
     role: {
         type: String,
-        enum: ["admin", "user"],
-        default: "user"
+        enum: ["admin", "author"],
+        default: "author"
     }
 }, {timestamps:true,})
 
-userSchema.pre('save', async function () {
+authorSchema.pre('save', async function () {
     if (this.password == null) {
         this.password = null
     } else {
@@ -34,7 +43,7 @@ userSchema.pre('save', async function () {
     }
 })
 
-userSchema.methods.comparePassword = async function (inputPassword) {
+authorSchema.methods.comparePassword = async function (inputPassword) {
     let isMatch
     if (this.password == null) {
         isMatch = false
@@ -44,4 +53,4 @@ userSchema.methods.comparePassword = async function (inputPassword) {
     return isMatch
 }
 
-module.exports = model("User", userSchema)
+module.exports = model("Author", authorSchema)
