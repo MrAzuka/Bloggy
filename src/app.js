@@ -30,6 +30,7 @@ connectToDB()
 // Note: Always place your middleware before your routes.
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+app.use(express.static('public'))
 app.use(cors())
 app.use(morgan('dev'))
 app.use(xss())

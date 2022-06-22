@@ -4,6 +4,7 @@ const router = Router()
 const {
     getLoginPage,
     getRegisterPage,
+    getAuthorPage,
     loginUser,
     registerUser,
     googleSignin,
@@ -18,6 +19,7 @@ router.post('/register', registerUser)
 router.post('/forgot-password', postForgotPasswordPage)
 
 // GET routes
+router.get('/dashboard', getAuthorPage)
 router.get('/auth/google', googleSignin(passport))
 router.get('/auth/google/callback', googleSigninCallback(passport))
 router.get('/login', getLoginPage)

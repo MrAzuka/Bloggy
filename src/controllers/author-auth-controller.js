@@ -6,6 +6,8 @@ exports.getLoginPage = (req, res) => res.render('login.ejs')
 
 exports.getRegisterPage = (req, res) => res.render('register.ejs')
 
+exports.getAuthorPage =  (req,res) => res.render("author-dashboard.ejs")
+
 exports.registerUser = async (req, res) => {
     const {
         username,
@@ -55,7 +57,7 @@ exports.googleSigninCallback = (passport) => {
 }
 
 // Password reset
-exports.getForgotPasswordPage = async (req, res) => res.render()
+exports.getForgotPasswordPage = async (req, res) => res.render("forgotPassword.ejs")
 
 exports.postForgotPasswordPage = async (req, res) => {
     const { email } = req.body
