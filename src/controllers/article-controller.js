@@ -15,14 +15,22 @@ exports.createArticle = async (req, res)=> {
 
 exports.getArticles = async (req,res) => {
     try {
-        const data = await Article.findById(req.user.id)
-        res.render('author-articles.ejs', {authorArticles: data})
+        const data = await Article.find(req.user.id)
+        res.render('pages/author-articles.ejs', {authorArticles: data, title: "Articles"})
     } catch (error) {
         req.flash('error', error)
         res.status(500).json(error)
     }
 }
-// exports.getOneArtilce =
+exports.getOneArticle = async (req,res) => {
+    try {
+        const data = await Article.findById(req.params.id)
+        res.render('pages/author-articles.ejs', {authorArticles: data, title: "Articles"})
+    } catch (error) {
+        req.flash('error', error)
+        res.status(500).json(error)
+    }
+}
 
 exports.deleteArticle = async(req,res) => {
     try {

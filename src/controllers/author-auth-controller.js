@@ -2,11 +2,11 @@ const User = require('../models/author-model')
 const {forgetPasswordMail} = require('../services/sendMails')
 
 
-exports.getLoginPage = (req, res) => res.render('login.ejs')
+exports.getLoginPage = (req, res) => res.render('pages/login.ejs', {title: "Login"})
 
-exports.getRegisterPage = (req, res) => res.render('register.ejs')
+exports.getRegisterPage = (req, res) => res.render('pages/register.ejs', {title: "Register"})
 
-exports.getAuthorPage =  (req,res) => res.render("author-dashboard.ejs")
+exports.getAuthorPage =  (req,res) => res.render("pages/author-dashboard.ejs",{title: "Dashboard"})
 
 exports.registerUser = async (req, res) => {
     const {
@@ -57,7 +57,7 @@ exports.googleSigninCallback = (passport) => {
 }
 
 // Password reset
-exports.getForgotPasswordPage = async (req, res) => res.render("forgotPassword.ejs")
+exports.getForgotPasswordPage = async (req, res) => res.render("pages/forgotPassword.ejs", {title: "Password Reset"})
 
 exports.postForgotPasswordPage = async (req, res) => {
     const { email } = req.body
