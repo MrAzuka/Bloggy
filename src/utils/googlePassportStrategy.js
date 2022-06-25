@@ -1,8 +1,8 @@
 require('dotenv').config()
 const GoogleStrategy = require('passport-google-oauth2').Strategy
-const User = require('../models/user-model')
+const User = require('../models/author-model')
 
-const initializeGooglePassport = (passport) => {
+exports.initializeGooglePassport = (passport) => {
 
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
@@ -36,5 +36,3 @@ const initializeGooglePassport = (passport) => {
         }).select('-password')
     })
 }
-
-module.exports = initializeGooglePassport

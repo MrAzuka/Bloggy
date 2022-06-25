@@ -1,7 +1,7 @@
-const User = require('../models/user-model')
+const User = require('../models/author-model')
 const LocalStrategy = require('passport-local').Strategy
 
-const initializePassport = (passport) => {
+exports.initializePassport = (passport) => {
     const authUser = async (email, password, done) => {
         // check if user exists
         const user = await User.findOne({ email: email })
@@ -26,4 +26,3 @@ const initializePassport = (passport) => {
         }).select('-password')
     });
 }
-module.exports = initializePassport
