@@ -5,30 +5,27 @@ exports.createArticle = async (req, res)=> {
     try {
         req.user = createdBy
         await Article.create(title, article, tag, createdBy)
-        req.flash('success_message', 'Article created successfully')
-        res.redirect('/dashboard')
+    
+        res.status(201).json({message: "Article Created"})
     } catch (error) {
-        req.flash('error', error)
-        res.status(500).json(error)
+        res.status(500).json({message: error})
     }
 }
 
 exports.getArticles = async (req,res) => {
     try {
         const data = await Article.find(req.user.id)
-        res.render('pages/author-articles.ejs', {authorArticles: data, title: "Articles"})
+        res.status(302).json({message: "Get All Article", articles: data})
     } catch (error) {
-        req.flash('error', error)
-        res.status(500).json(error)
+        res.status(500).json({message: error})
     }
 }
 exports.getOneArticle = async (req,res) => {
     try {
         const data = await Article.findById(req.params.id)
-        res.render('pages/author-articles.ejs', {authorArticles: data, title: "Articles"})
+        res.status(302).json({message: "Get One Article with id", article: data})
     } catch (error) {
-        req.flash('error', error)
-        res.status(500).json(error)
+        res.status(500).json({message: error})
     }
 }
 
@@ -36,13 +33,10 @@ exports.deleteArticle = async(req,res) => {
     try {
         const getArticle = await Article.findByIdAndDelete(req.params.id)
         if (req.params.id !== getArticle) {
-            req.flash('error_message', "Article doesn't exist")
-            res.redirect('/dashboard')
+            res.status(404).json({message: "Article Not Found"})
         }
-        req.flash('success_message', "Delete successful")
-        res.redirect('/dashboard')
+        res.status(200).json({message: "Article Deleted Successfully"})
     } catch (error) {
-        req.flash('error', error)
-        res.status(500).json(error)
+        res.status(500).json({message: error})
     }
 }

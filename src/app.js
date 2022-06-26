@@ -7,11 +7,8 @@ const helmet = require("helmet")
 const xss = require("xss-clean")
 const cors = require("cors")
 const passport = require('passport')
-const flash = require('connect-flash')
 const session = require('express-session')
-const path = require('path')
 // const rateLimiter = require('express-rate-limiter')
-const methodOverride = require('method-override')
 
 // Requiring modules in files
 const {connectToDB} = require('./utils/connectDB')
@@ -27,9 +24,6 @@ const articleRoute = require('./routes/article-routes')
 // Initialize App
 const app = express()
 
-// Templating Engine
-app.set('views', path.join(__dirname, '../src/views'))
-app.set('view engine', 'ejs')
 
 // Connect Database
 connectToDB()
@@ -39,7 +33,6 @@ connectToDB()
 // Note: Always place your middleware before your routes.
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
-app.use(express.static('public'))
 app.use(cors())
 app.use(morgan('dev'))
 app.use(xss())
@@ -50,7 +43,7 @@ app.use(helmet())
 //       max: 1000, // limit each IP to 1000 requests per windowMs
 //     })
 //   )
-app.use(methodOverride('_method'))
+
 
 // session
 app.use(session({
@@ -60,15 +53,6 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-
-// flash
-app.use(flash())
-app.use((req, res, next) => {
-    res.locals.success_flash = req.flash('success_message')
-    res.locals.error_flash = req.flash("error_message");
-    res.locals.error = req.flash("error");
-    next()
-})
 
 
 //  Save current user in session

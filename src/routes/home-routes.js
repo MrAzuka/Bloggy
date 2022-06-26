@@ -5,7 +5,7 @@ const Article = require('../models/article-model')
 router.get('/', async (req,res) => {
     const data = await Article.find()
 
-    res.render('pages/home', {article: data, title: "Bloggy"})
+    res.send(data)
 })
 
 module.exports = router
