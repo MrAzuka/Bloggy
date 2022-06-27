@@ -1,6 +1,10 @@
-const {Router} = require('express')
+const {
+    Router
+} = require('express')
 const router = Router()
-const {isAuth} = require('../middleware/auth-middleware')
+const {
+    isAuth
+} = require('../middleware/auth-middleware')
 const {
     createArticle,
     deleteArticle

@@ -1,4 +1,8 @@
-const {Schema, model, Types} = require('mongoose')
+const {
+    Schema,
+    model,
+    Types
+} = require('mongoose')
 
 const articleSchema = new Schema({
     title: {
@@ -18,7 +22,9 @@ const articleSchema = new Schema({
         ref: 'User',
         required: [true, "Please provide user"]
     }
-}, {timestamps:true,})
+}, {
+    timestamps: true,
+})
 
 
 

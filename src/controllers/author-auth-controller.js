@@ -1,5 +1,8 @@
 const User = require('../models/author-model')
-const {forgetPasswordMail} = require('../services/sendMails')
+const {
+    forgetPasswordMail,
+    welcomeToBloggyMail
+} = require('../services/sendMails')
 
 exports.registerUser = async (req, res) => {
     const {
@@ -13,13 +16,20 @@ exports.registerUser = async (req, res) => {
             email
         })
         if (checkUser == true) {
-            res.status(302).json({message: "Author Found"})
+            res.status(302).json({
+                message: "Author Found"
+            })
         }
 
         await User.create(username, email, password)
-        res.status(201).json({message: "Author Registered Successfully"})
+        res.status(201).json({
+            message: "Author Registered Successfully"
+        })
+        await welcomeToBloggyMail(req, username)
     } catch (error) {
-        res.status(500).json({message: error})
+        res.status(500).json({
+            message: error
+        })
     }
 }
 
@@ -48,26 +58,38 @@ exports.googleSigninCallback = (passport) => {
 
 // Password reset
 exports.postForgotPasswordPage = async (req, res) => {
-    const { email } = req.body
+    const {
+        email
+    } = req.body
     try {
         if (!email) {
-            res.status(406).json({message: "Not Vaild Email"})
+            res.status(406).json({
+                message: "Not Vaild Email"
+            })
         }
-    
+
         // check if email is registered
-        let user = await User.findOne({ email: email })
+        let user = await User.findOne({
+            email: email
+        })
         if (!user) {
-            res.status(404).json({message: "Author Email Not Found"})
+            res.status(404).json({
+                message: "Author Email Not Found"
+            })
         }
-    
+
         const token = crypto.randomBytes(25).toString('hex')
         user.passwordResetToken = token
         user.tokenExpiryTime = Date.now() + 900000 //present time plus 15mis
         user = await user.save()
-    
+
         await forgetPasswordMail(req, token)
-        res.status(200).json({message: "Reset Mail Sent"})
+        res.status(200).json({
+            message: "Reset Mail Sent"
+        })
     } catch (error) {
-        res.status(500).json({message: error})
+        res.status(500).json({
+            message: error
+        })
     }
 }

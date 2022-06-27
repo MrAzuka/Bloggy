@@ -5,14 +5,16 @@ const User = require('../models/author-model')
 exports.initializeGooglePassport = (passport) => {
 
     passport.use(new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL:  "http://127.0.0.1:5000/auth/google/callback",
-        passReqToCallback: true
-    },
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: "http://127.0.0.1:5000/auth/google/callback",
+            passReqToCallback: true
+        },
         async (request, accessToken, refreshToken, profile, done) => {
             // check if user with the google id already exists
-            const user = await User.findOne({ email: profile.emails[0].value })
+            const user = await User.findOne({
+                email: profile.emails[0].value
+            })
             if (user) {
                 return done(null, user)
             } else {

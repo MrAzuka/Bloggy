@@ -11,9 +11,15 @@ const session = require('express-session')
 // const rateLimiter = require('express-rate-limiter')
 
 // Requiring modules in files
-const {connectToDB} = require('./utils/connectDB')
-const {initializePassport} = require('./utils/localPassportStrategy')
-const {initializeGooglePassport} = require('./utils/googlePassportStrategy')
+const {
+  connectToDB
+} = require('./utils/connectDB')
+const {
+  initializePassport
+} = require('./utils/localPassportStrategy')
+const {
+  initializeGooglePassport
+} = require('./utils/googlePassportStrategy')
 
 // ROUTES
 const homeRoute = require('./routes/home-routes')
@@ -32,7 +38,9 @@ connectToDB()
 // Middleware
 // Note: Always place your middleware before your routes.
 app.use(express.json())
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({
+  extended: false
+}))
 app.use(cors())
 app.use(morgan('dev'))
 app.use(xss())
@@ -72,4 +80,4 @@ app.use(homeRoute)
 app.use(authorRoute)
 app.use(articleRoute)
 
-module.exports =  app
+module.exports = app

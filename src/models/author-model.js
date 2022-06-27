@@ -1,4 +1,7 @@
-const {Schema, model} = require('mongoose')
+const {
+    Schema,
+    model
+} = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const authorSchema = new Schema({
@@ -18,7 +21,7 @@ const authorSchema = new Schema({
     password: {
         type: String
     },
-    passwordResetToken:{
+    passwordResetToken: {
         type: String,
         default: null,
     },
@@ -32,7 +35,9 @@ const authorSchema = new Schema({
         enum: ["admin", "author"],
         default: "author"
     }
-}, {timestamps:true,})
+}, {
+    timestamps: true,
+})
 
 authorSchema.pre('save', async function () {
     if (this.password == null) {

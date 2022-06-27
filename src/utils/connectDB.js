@@ -1,7 +1,9 @@
 require('dotenv').config()
-const {connect} =  require('mongoose')
+const {
+    connect
+} = require('mongoose')
 
-exports.connectToDB = async ()=> {
+exports.connectToDB = async () => {
     try {
         await connect(process.env.MONGO_URI_TEST_DB, {
             useNewUrlParser: true,
