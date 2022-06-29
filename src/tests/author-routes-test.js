@@ -30,6 +30,7 @@ const noPasswordAuthor = {
     email: "noPassword@gmail.com"
 }
 describe("Test Author Authentication Route", () => {
+    
     before(async () => {
         //delete all occurences of the test user from the db
         await User.deleteMany({ email: testAuthor.email });

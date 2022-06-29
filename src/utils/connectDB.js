@@ -3,10 +3,23 @@ const {
     connect
 } = require('mongoose')
 
-const MONGO_URL = process.env.MONGO_URI_TEST_DB;
+
+ let mongoURI;
+if (process.env.NODE_ENV ==='development'){
+  mongoURI = process.env.MONGO_URI_DEV
+}
+if (process.env.NODE_ENV ==='test'){
+  mongoURI = process.env.MONGO_URI_TEST
+}
+if (process.env.NODE_ENV ==='production'){
+  mongoURI = process.env.MONGO_URI_PROD
+}
+
+
+
 exports.connectToDB = async () => {
   try {
-    await connect(MONGO_URL, {
+    await connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
