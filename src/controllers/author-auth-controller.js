@@ -1,4 +1,5 @@
 const User = require('../models/author-model')
+const bcrypt= require('bcryptjs')
 
 const {
     forgetPasswordMail,
