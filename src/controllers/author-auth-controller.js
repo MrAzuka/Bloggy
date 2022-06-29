@@ -1,5 +1,5 @@
 const User = require('../models/author-model')
-const bcrypt = require('bcryptjs')
+
 const {
     forgetPasswordMail,
     welcomeToBloggyMail
@@ -7,37 +7,34 @@ const {
 const { createAccessToken } = require('../utils/accessToken');
 
 exports.registerUser = async (req, res) => {
-    const {
-        username,
-        email,
-        password
-    } = req.body
     try {
+        const {
+            username,
+            email,
+            password
+        } = req.body
         // Check if Author exists
         const checkUser = await User.findOne({
             email
         })
-        if (checkUser == true) {
-            res.status(302).json({
+        if (checkUser) {
+           return res.status(302).json({
                 message: "Author Found"
             })
         }
         
-        const salt = bcrypt.genSalt(10)
-        const hashedPassword = bcrypt.hash(password, salt)
         
-        console.log("I got here")
-        await User.create({
-            username: username,
-            email: email,
-            password: hashedPassword
+        const newUser = await User.create({
+            username,
+            email,
+            password
         })
 
-        console.log("I got here created")
-        res.status(201).json({
+        // await welcomeToBloggyMail(req, username)
+       return res.status(201).json({
             message: "Author Registered Successfully"
         })
-        await welcomeToBloggyMail(req, username)
+        
     } catch (error) {
         res.status(500).json({
             message: error

@@ -15,9 +15,6 @@ const {
   connectToDB
 } = require('./utils/connectDB')
 const {
-  initializePassport
-} = require('./utils/localPassportStrategy')
-const {
   initializeGooglePassport
 } = require('./utils/googlePassportStrategy')
 
@@ -52,11 +49,11 @@ app.use(helmet())
 //     })
 //   )
 
-initializePassport(passport)
+
 initializeGooglePassport(passport)
 
 app.use(passport.initialize())
-app.use(passport.session())
+
 
 
 //  Save current user in session

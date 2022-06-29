@@ -2,7 +2,7 @@ const {
     Schema,
     model
 } = require('mongoose')
-
+const bcrypt = require('bcryptjs')
 
 const authorSchema = new Schema({
     username: {
@@ -41,6 +41,20 @@ const authorSchema = new Schema({
     timestamps: true,
 })
 
+authorSchema.pre('save', async function (next) {
+    //If password is not modified then skip
+    if (!this.isModified('password')) {
+      return next();
+    }
+  
+    //if password is modified then change hash the password and save it.
+    //also remove the passwordConfirm.
+  
+    //hash the password
+    this.password = await bcrypt.hash(this.password, 12);
+  
+    next();
+  });
 
 
 
