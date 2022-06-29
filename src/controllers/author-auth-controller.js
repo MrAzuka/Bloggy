@@ -1,5 +1,6 @@
 const User = require('../models/author-model')
 const bcrypt= require('bcryptjs')
+const crypto = require('crypto')
 
 const {
     forgetPasswordMail,
@@ -72,7 +73,7 @@ exports.loginUser = async (req, res) => {
   const accessToken = createAccessToken(user._id);
   
   res.status(200).json({
-      message : `user ${req.user.username} is logged in`,
+      message : "Author is logged in",
     accessToken
   });
 };
@@ -95,10 +96,11 @@ exports.googleSigninCallback = (passport) => {
 
 // Password reset
 exports.postForgotPasswordPage = async (req, res) => {
-    const {
-        email
-    } = req.body
+    
     try {
+        const {
+            email
+        } = req.body
         if (!email) {
             res.status(406).json({
                 message: "Not Vaild Email"
