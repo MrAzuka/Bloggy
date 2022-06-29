@@ -3,7 +3,7 @@ const bcrypt= require('bcryptjs')
 
 const {
     forgetPasswordMail,
-    welcomeToBloggyMail
+    // welcomeToBloggyMail
 } = require('../services/sendMails')
 const { createAccessToken } = require('../utils/accessToken');
 
@@ -25,7 +25,7 @@ exports.registerUser = async (req, res) => {
         }
         
         
-        const newUser = await User.create({
+        await User.create({
             username,
             email,
             password
