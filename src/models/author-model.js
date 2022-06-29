@@ -2,7 +2,7 @@ const {
     Schema,
     model
 } = require('mongoose')
-const bcrypt = require('bcrypt')
+
 
 const authorSchema = new Schema({
     username: {
@@ -19,7 +19,9 @@ const authorSchema = new Schema({
         lowercase: true
     },
     password: {
-        type: String
+        type: String,
+        required: true,
+        select: false
     },
     passwordResetToken: {
         type: String,
@@ -39,23 +41,7 @@ const authorSchema = new Schema({
     timestamps: true,
 })
 
-authorSchema.pre('save', async function () {
-    if (this.password == null) {
-        this.password = null
-    } else {
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password, salt)
-    }
-})
 
-authorSchema.methods.comparePassword = async function (inputPassword) {
-    let isMatch
-    if (this.password == null) {
-        isMatch = false
-        return isMatch
-    }
-    isMatch = await bcrypt.compare(inputPassword, this.password)
-    return isMatch
-}
+
 
 module.exports = model("Author", authorSchema)

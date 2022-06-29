@@ -1,8 +1,10 @@
 const User = require('../models/author-model')
+const bcrypt = require('bcryptjs')
 const {
     forgetPasswordMail,
     welcomeToBloggyMail
 } = require('../services/sendMails')
+const { createAccessToken } = require('../utils/accessToken');
 
 exports.registerUser = async (req, res) => {
     const {
@@ -20,8 +22,18 @@ exports.registerUser = async (req, res) => {
                 message: "Author Found"
             })
         }
+        
+        const salt = bcrypt.genSalt(10)
+        const hashedPassword = bcrypt.hash(password, salt)
+        
+        console.log("I got here")
+        await User.create({
+            username: username,
+            email: email,
+            password: hashedPassword
+        })
 
-        await User.create(username, email, password)
+        console.log("I got here created")
         res.status(201).json({
             message: "Author Registered Successfully"
         })
@@ -33,13 +45,40 @@ exports.registerUser = async (req, res) => {
     }
 }
 
-exports.loginUser = (passport) => {
-    return passport.authenticate('local', {
-        successRedirect: "/dashboard",
-        failureRedirect: "/login",
-        failureFlash: true,
-    })
-}
+
+exports.loginUser = async (req, res) => {
+
+  const { email, password } = req.body;
+
+  //check that email and password were sent
+  if (!email || !password) {
+    return res.status(400).json({message: 'email and password are required'});
+  }
+
+  //check that user with the email exists
+
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) {
+    return res.status(404).json({message: 'User with email not found'})
+  }
+
+  //check that the passwords match
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    return res.status(400).json({message: 'Invalid email or password'})
+  }
+
+  //generate an accessToken and refresh token for the user.
+  const accessToken = createAccessToken(user._id);
+  
+  res.status(200).json({
+      message : `user ${req.user.username} is logged in`,
+    accessToken
+  });
+};
+
 
 
 exports.googleSignin = (passport) => {
