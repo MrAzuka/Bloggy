@@ -6,11 +6,17 @@ const {
   forgetPasswordMail,
   welcomeToBloggyMail,
 } = require("../services/sendMails");
-const { createAccessToken } = require("../utils/accessToken");
+const {
+  createAccessToken
+} = require("../utils/accessToken");
 
 exports.registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const {
+      username,
+      email,
+      password
+    } = req.body;
     // Check if Author exists
     const checkUser = await User.findOne({
       email,
@@ -39,26 +45,37 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const {
+    email,
+    password
+  } = req.body;
 
   //check that email and password were sent
   if (!email || !password) {
-    return res.status(400).json({ message: "email and password are required" });
+    return res.status(400).json({
+      message: "email and password are required"
+    });
   }
 
   //check that user with the email exists
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({
+    email
+  }).select("+password");
 
   if (!user) {
-    return res.status(404).json({ message: "User with email not found" });
+    return res.status(404).json({
+      message: "User with email not found"
+    });
   }
 
   //check that the passwords match
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid email or password" });
+    return res.status(400).json({
+      message: "Invalid email or password"
+    });
   }
 
   //generate an accessToken and refresh token for the user.
@@ -87,7 +104,9 @@ exports.googleSigninCallback = (passport) => {
 // Password reset
 exports.postForgotPasswordPage = async (req, res) => {
   try {
-    const { email } = req.body;
+    const {
+      email
+    } = req.body;
     if (!email) {
       return res.status(406).json({
         message: "Not Vaild Email",
@@ -112,6 +131,7 @@ exports.postForgotPasswordPage = async (req, res) => {
     await forgetPasswordMail(req, token);
     res.status(200).json({
       message: "Reset Mail Sent",
+      token: token
     });
   } catch (error) {
     res.status(500).json({
@@ -119,3 +139,32 @@ exports.postForgotPasswordPage = async (req, res) => {
     });
   }
 };
+
+exports.postResetPassword = async (req, res) => {
+  try {
+    const {
+      token
+    } = req.params;
+    let user = await User.findOne({
+      passwordResetToken: token
+    });
+
+    if (!user) {
+      return res.redirect("/forgot-password");
+    }
+
+
+    // update password
+    user.password = req.body.password
+    user.passwordResetToken = null
+    user.tokenExpiryTime = null
+    user = await user.save()
+    res.status(200).json({
+      message: "Password reset"
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: error,
+    });
+  }
+}
