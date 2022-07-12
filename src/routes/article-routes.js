@@ -3,7 +3,7 @@ const {
 } = require('express')
 const router = Router()
 const {
-    isAuth
+    requireSignIn
 } = require('../middleware/auth-middleware')
 const {
     createArticle,
@@ -11,10 +11,10 @@ const {
 } = require('../controllers/article-controller')
 
 // POST
-router.post('/new-article', isAuth, createArticle)
+router.post('/new-article', requireSignIn, createArticle)
 
 
 // DELETE
-router.delete('/delete-article', isAuth, deleteArticle)
+router.delete('/delete-article', requireSignIn, deleteArticle)
 
 module.exports = router

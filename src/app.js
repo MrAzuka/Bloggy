@@ -7,16 +7,13 @@ const helmet = require("helmet")
 const xss = require("xss-clean")
 const cors = require("cors")
 const passport = require('passport')
-const session = require('express-session')
+
 // const rateLimiter = require('express-rate-limiter')
 
 // Requiring modules in files
 const {
   connectToDB
 } = require('./utils/connectDB')
-const {
-  initializePassport
-} = require('./utils/localPassportStrategy')
 const {
   initializeGooglePassport
 } = require('./utils/googlePassportStrategy')
@@ -39,7 +36,7 @@ connectToDB()
 // Note: Always place your middleware before your routes.
 app.use(express.json())
 app.use(express.urlencoded({
-  extended: false
+  extended: true
 }))
 app.use(cors())
 app.use(morgan('dev'))
@@ -53,14 +50,10 @@ app.use(helmet())
 //   )
 
 
-// session
-app.use(session({
-  secret: process.env.SESSION_KEY,
-  resave: false,
-  saveUninitialized: false
-}))
+initializeGooglePassport(passport)
+
 app.use(passport.initialize())
-app.use(passport.session())
+
 
 
 //  Save current user in session
@@ -71,8 +64,7 @@ app.use(function (req, res, next) {
 
 
 
-initializePassport(passport)
-initializeGooglePassport(passport)
+
 
 
 // Use Routes
